@@ -1,4 +1,5 @@
 import os
+import cutImage
 from os.path import join, dirname, realpath
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -24,11 +25,12 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'img.png'))
-            return UPLOAD_FOLDER
-            # return redirect(url_for('uploaded_file', filename=filename))
+            resp = cutImage.cut()
+            if resp == True:
+                return 'sucesso'
+            else:
+                return 'falha'
     return '''
     <!doctype html>
     <title>Upload new File</title>
